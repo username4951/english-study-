@@ -18,7 +18,7 @@
   --bg:#F5F4FA;--surface:#FFFFFF;--surface2:#F0EFF8;
   --text:#1A1830;--text2:#6B6885;--text3:#A8A6BC;
   --border:rgba(83,74,183,0.12);--border2:rgba(83,74,183,0.22);
-  --red:#E53935;--red-light:#FFEBEE;
+  --red:#E53935;--red-light:#FFEBEE;--green:#43A047;
   --radius:14px;--radius-sm:8px;--radius-pill:20px;
 }
 @media(prefers-color-scheme:dark){
@@ -31,8 +31,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .main{flex:1;overflow-y:auto;padding:16px 16px 100px}
 .tab-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--surface);border-top:0.5px solid var(--border);display:flex;padding:8px 0 max(12px,env(safe-area-inset-bottom));z-index:10}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--text3);background:none;border:none;cursor:pointer;padding:4px 0;transition:color 0.15s}
-.tab i{font-size:22px}
-.tab.active{color:var(--purple)}
+.tab i{font-size:22px}.tab.active{color:var(--purple)}
 .card{background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:20px;margin-bottom:12px}
 .card-sm{padding:14px 16px}
 .section-label{font-size:11px;font-weight:600;color:var(--purple);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;display:flex;align-items:center;gap:5px}
@@ -60,11 +59,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .empty i{font-size:48px;color:var(--text3);display:block;margin-bottom:12px}
 .empty p{font-size:15px;color:var(--text2);margin-bottom:6px}
 .empty small{font-size:13px;color:var(--text3)}
-/* Folder chips */
 .folder-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .folder-chip{font-size:12px;font-weight:500;padding:5px 13px;border-radius:var(--radius-pill);border:0.5px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;transition:all 0.15s}
 .folder-chip.active{background:var(--purple);color:white;border-color:var(--purple)}
-/* Calendar */
 .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .cal-title{font-size:16px;font-weight:600}
 .cal-nav{background:none;border:none;cursor:pointer;color:var(--text2);padding:6px}
@@ -79,20 +76,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .cal-day.empty{cursor:default;background:none}
 .cal-legend{display:flex;gap:16px;justify-content:center;font-size:11px;color:var(--text3);margin-top:10px;align-items:center}
 .cal-legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
-/* All */
 .expr-item{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:10px}
 .expr-item:active{background:var(--surface2)}
 .expr-item-body{flex:1;min-width:0}
-.expr-item-date{font-size:11px;font-weight:600;color:var(--purple);margin-bottom:2px;display:flex;align-items:center;gap:6px}
+.expr-item-top{display:flex;align-items:center;gap:6px;margin-bottom:2px}
+.expr-item-date{font-size:11px;font-weight:600;color:var(--purple)}
 .expr-item-kor{font-size:13px;color:var(--text2);margin-bottom:3px}
 .expr-item-eng{font-size:15px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.expr-item-chevron{color:var(--text3);font-size:16px;flex-shrink:0}
+.expr-item-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.fav-btn{background:none;border:none;cursor:pointer;padding:4px;font-size:20px;color:var(--text3);transition:color 0.15s}
+.fav-btn.active{color:#FB8C00}
 .back-btn{display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:var(--purple);font-size:14px;font-weight:500;margin-bottom:16px;padding:0}
 .back-btn i{font-size:18px}
 .detail-actions{display:flex;gap:8px;margin-bottom:16px}
 .btn-edit{flex:1;padding:9px;background:var(--purple-light);color:var(--purple);border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
 .btn-delete{padding:9px 14px;background:var(--red-light);color:var(--red);border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
-/* Admin */
+.btn-fav-detail{padding:9px 14px;background:#FFF8E1;color:#FB8C00;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
+.btn-fav-detail.active{background:#FB8C00;color:white}
 .admin-block{margin-bottom:20px}
 .admin-heading{font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .admin-heading i{font-size:17px;color:var(--purple)}
@@ -112,19 +112,15 @@ textarea{resize:vertical;min-height:72px;line-height:1.6}
 .file-chip span{font-size:13px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .file-chip button{background:none;border:none;cursor:pointer;color:var(--text2);padding:2px;flex-shrink:0}
 .divider{height:0.5px;background:var(--border);margin:16px 0}
-.entry-list-item{display:flex;align-items:center;padding:11px 14px;background:var(--surface);border-radius:var(--radius-sm);border:0.5px solid var(--border);margin-bottom:8px;cursor:pointer}
-.entry-list-item:active{background:var(--surface2)}
-.entry-list-item-left{flex:1;min-width:0}
+.entry-list-item{display:flex;align-items:center;padding:11px 14px;background:var(--surface);border-radius:var(--radius-sm);border:0.5px solid var(--border);margin-bottom:8px}
+.entry-list-item-left{flex:1;min-width:0;cursor:pointer}
 .entry-list-date{font-size:11px;color:var(--purple);font-weight:600;margin-bottom:2px;display:flex;align-items:center;gap:6px}
 .entry-list-text{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.entry-list-item>.entry-delete{background:none;border:none;cursor:pointer;color:var(--red);padding:6px;flex-shrink:0;font-size:18px}
-.entry-list-item>i.chevron{color:var(--text3);font-size:16px;flex-shrink:0}
-/* Folder manager */
+.entry-delete{background:none;border:none;cursor:pointer;color:var(--red);padding:6px;flex-shrink:0;font-size:18px}
 .folder-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .folder-color-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
 .folder-name-text{flex:1;font-size:14px;color:var(--text)}
 .folder-delete-btn{background:none;border:none;cursor:pointer;color:var(--text3);padding:4px;font-size:16px}
-/* Confirm dialog */
 .confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
 .confirm-box{background:var(--surface);border-radius:var(--radius);padding:24px;width:100%;max-width:320px}
 .confirm-title{font-size:16px;font-weight:600;margin-bottom:8px}
@@ -132,10 +128,14 @@ textarea{resize:vertical;min-height:72px;line-height:1.6}
 .confirm-btns{display:flex;gap:8px}
 .confirm-cancel{flex:1;padding:11px;background:var(--surface2);color:var(--text2);border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:500;cursor:pointer}
 .confirm-ok{flex:1;padding:11px;background:var(--red);color:white;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer}
+.loading{display:flex;align-items:center;justify-content:center;padding:48px 20px;gap:10px;color:var(--text3);font-size:14px}
+.loading i{font-size:24px;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px}
+.sync-dot.off{background:var(--text3)}
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--purple);color:white;padding:10px 20px;border-radius:var(--radius-pill);font-size:13px;font-weight:500;opacity:0;transition:opacity 0.25s;pointer-events:none;white-space:nowrap;z-index:999}
 .toast.show{opacity:1}
-.screen{display:none}
-.screen.active{display:block}
+.screen{display:none}.screen.active{display:block}
 </style>
 </head>
 <body>
@@ -146,49 +146,81 @@ textarea{resize:vertical;min-height:72px;line-height:1.6}
 <main class="main">
   <div class="screen active" id="screen-today"></div>
   <div class="screen" id="screen-all"></div>
+  <div class="screen" id="screen-fav"></div>
   <div class="screen" id="screen-calendar"></div>
   <div class="screen" id="screen-admin"></div>
 </main>
 <nav class="tab-bar">
   <button class="tab active" onclick="showTab('today')"><i class="ti ti-star"></i><span>오늘</span></button>
   <button class="tab" onclick="showTab('all')"><i class="ti ti-books"></i><span>전체</span></button>
+  <button class="tab" onclick="showTab('fav')"><i class="ti ti-heart"></i><span>즐겨찾기</span></button>
   <button class="tab" onclick="showTab('calendar')"><i class="ti ti-calendar"></i><span>달력</span></button>
   <button class="tab" onclick="showTab('admin')"><i class="ti ti-settings"></i><span>관리</span></button>
 </nav>
 <div class="toast" id="toast"></div>
 <script>
-const DB = 'english_study_v2';
-const DB_FOLDERS = 'english_study_folders_v1';
+// ── Supabase 설정 ──
+const SB_URL = 'https://pkxssagcqbyrptsprkrz.supabase.co';
+const SB_KEY = 'sb_publishable_TiYaLIvfSH5NZsj9F2wqXw_uEM-4WJf';
 
 const FOLDER_COLORS = ['#534AB7','#E53935','#43A047','#FB8C00','#00897B','#1E88E5','#8E24AA','#F06292'];
 
-const DEFAULT_FOLDERS = [
-  {id:'f1', name:'일상표현', color:'#534AB7'},
-  {id:'f2', name:'비즈니스', color:'#1E88E5'},
-  {id:'f3', name:'숙어', color:'#43A047'},
-];
+// 기기 고유 ID (즐겨찾기용)
+function getDeviceId(){
+  let id = localStorage.getItem('device_id');
+  if(!id){ id = 'dev_' + Math.random().toString(36).slice(2) + Date.now(); localStorage.setItem('device_id', id); }
+  return id;
+}
+const DEVICE_ID = getDeviceId();
 
-const SAMPLE = [
-  {id:1,date:'2026-06-15',folder:'f1',korean:'사는게 다 그렇지 뭐',english:'Such is life.',thinking:'그런(것이) 이야 인생.',words:'such - a. 그러한',explanation:'"such"처럼 형용사가 명사처럼 쓰이면 뒤에 "thing or person"이 생략되어 있습니다.',audioName:null,audioData:null},
-  {id:2,date:'2026-06-16',folder:'f3',korean:'잠깐 쉬면서 마음 좀 추스려.',english:'Take a break and smell the roses.',thinking:'취해/하나의 휴식을 그리고 냄새맡어/그 장미들을\n*smell the roses [로우지즈] : 여유를 가지다',words:'smell the roses [로우지즈]\n: 여유를 가지다',explanation:'"smell the roses"는 비유적 표현으로, 여유롭게 주변을 즐기라는 의미예요.',audioName:null,audioData:null}
-];
-
-function load(){try{return JSON.parse(localStorage.getItem(DB)||'null')||[...SAMPLE]}catch(e){return[...SAMPLE]}}
-function loadFolders(){try{return JSON.parse(localStorage.getItem(DB_FOLDERS)||'null')||[...DEFAULT_FOLDERS]}catch(e){return[...DEFAULT_FOLDERS]}}
-function save(d){localStorage.setItem(DB,JSON.stringify(d))}
-function saveFolders(f){localStorage.setItem(DB_FOLDERS,JSON.stringify(f))}
-
-let entries=load(), folders=loadFolders();
+let entries=[], folders=[], favorites=new Set();
 let pendingAudio={name:null,data:null};
 let calYear,calMonth,currentAudio=null;
 let allFilterFolder='all';
+let isAdmin = localStorage.getItem('is_admin') === 'true';
 
 function today(){return new Date().toISOString().slice(0,10)}
 function fmtDate(s){const[,m,d]=s.split('-');return`${parseInt(m)}/${parseInt(d)}`}
 function fmtDateKr(s){const[y,m,d]=s.split('-');return`${y}년 ${parseInt(m)}월 ${parseInt(d)}일`}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function showToast(msg,dur=2200){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur)}
 function getFolder(id){return folders.find(f=>f.id===id)}
 
+// ── Supabase API ──
+async function sb(method, path, body){
+  const res = await fetch(SB_URL + '/rest/v1/' + path, {
+    method,
+    headers:{
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': method==='POST' ? 'return=representation' : ''
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  if(!res.ok){ const e=await res.text(); throw new Error(e); }
+  const txt = await res.text();
+  return txt ? JSON.parse(txt) : null;
+}
+
+// ── 데이터 로드 ──
+async function loadAll(){
+  try{
+    const [expRes, folRes, favRes] = await Promise.all([
+      sb('GET','expressions?select=*&order=date.desc'),
+      sb('GET','folders?select=*&order=created_at.asc'),
+      sb('GET',`favorites?select=expression_id&device_id=eq.${DEVICE_ID}`)
+    ]);
+    entries = expRes || [];
+    folders = folRes || [];
+    favorites = new Set((favRes||[]).map(f=>f.expression_id));
+    return true;
+  } catch(e){
+    console.error(e);
+    return false;
+  }
+}
+
+// ── HTML 빌더 ──
 function folderBadgeHTML(folderId){
   const f=getFolder(folderId);
   if(!f)return'';
@@ -196,19 +228,23 @@ function folderBadgeHTML(folderId){
 }
 
 function audioBlock(entry){
-  if(!entry.audioData)return`<div class="no-audio"><i class="ti ti-volume-off"></i><span>음성 파일 없음</span></div>`;
-  return`<div class="audio-player"><button class="play-btn" onclick="toggleAudio(${entry.id})" id="pb${entry.id}"><i class="ti ti-player-play" id="pi${entry.id}"></i></button><div class="audio-info"><div class="audio-name">${entry.audioName||'음성 파일'}</div><div class="audio-hint">탭하여 재생</div></div></div>`;
+  if(!entry.audio_data)return`<div class="no-audio"><i class="ti ti-volume-off"></i><span>음성 파일 없음</span></div>`;
+  return`<div class="audio-player"><button class="play-btn" onclick="toggleAudio(${entry.id})" id="pb${entry.id}"><i class="ti ti-player-play" id="pi${entry.id}"></i></button><div class="audio-info"><div class="audio-name">${entry.audio_name||'음성 파일'}</div><div class="audio-hint">탭하여 재생</div></div></div>`;
 }
 
-function entryHTML(entry, backFn){
+function entryHTML(entry, backFn, fromTab){
+  const isFav = favorites.has(entry.id);
   return`
-    ${backFn?`<button class="back-btn" onclick="${backFn}"><i class="ti ti-arrow-left"></i>목록으로</button>`:''}
-    ${backFn?`<div class="detail-actions">
-      <button class="btn-edit" onclick="editEntryFromDetail(${entry.id})"><i class="ti ti-edit" style="font-size:15px"></i>수정</button>
-      <button class="btn-delete" onclick="confirmDelete(${entry.id})"><i class="ti ti-trash" style="font-size:15px"></i>삭제</button>
-    </div>`:''}
-    <div class="${backFn?'card':'card'}">
-      <div><span class="badge-date">${fmtDateKr(entry.date)}</span>${folderBadgeHTML(entry.folder)}</div>
+    <button class="back-btn" onclick="${backFn}"><i class="ti ti-arrow-left"></i>목록으로</button>
+    <div class="detail-actions">
+      <button class="btn-fav-detail${isFav?' active':''}" onclick="toggleFav(${entry.id},this)">
+        <i class="ti ti-heart${isFav?'-filled':''}"></i>${isFav?'즐겨찾기 해제':'즐겨찾기'}
+      </button>
+      ${isAdmin?`<button class="btn-edit" onclick="editEntryFromDetail(${entry.id})"><i class="ti ti-edit" style="font-size:15px"></i>수정</button>
+      <button class="btn-delete" onclick="confirmDelete(${entry.id})"><i class="ti ti-trash" style="font-size:15px"></i>삭제</button>`:''}
+    </div>
+    <div class="card">
+      <div><span class="badge-date">${fmtDateKr(entry.date)}</span>${folderBadgeHTML(entry.folder_id)}</div>
       <div class="korean">${entry.korean}</div>
       <div class="english">${entry.english}</div>
       ${audioBlock(entry)}
@@ -219,21 +255,45 @@ function entryHTML(entry, backFn){
   `;
 }
 
-/* TODAY */
-function renderToday(){
+function entryCardHTML(entry){
+  const isFav = favorites.has(entry.id);
+  return`
+    <div class="card">
+      <div><span class="badge-date">${fmtDateKr(entry.date)}</span>${folderBadgeHTML(entry.folder_id)}</div>
+      <div class="korean">${entry.korean}</div>
+      <div class="english">${entry.english}</div>
+      ${audioBlock(entry)}
+      ${entry.thinking?`<div class="thinking-box"><strong style="font-size:11px;opacity:0.7">영사고</strong><br>${entry.thinking.replace(/\n/g,'<br>')}</div>`:''}
+    </div>
+    ${entry.words?`<div class="card card-sm"><div class="section-label"><i class="ti ti-a-b"></i>단어</div><div class="word-chips">${entry.words.split('\n').map(w=>`<span class="chip">${w.trim()}</span>`).join('')}</div></div>`:''}
+    ${entry.explanation?`<div class="card card-sm"><div class="section-label"><i class="ti ti-bulb"></i>해설</div><div class="explanation">${entry.explanation}</div></div>`:''}
+    <button class="btn-fav-detail${isFav?' active':''}" onclick="toggleFav(${entry.id},this)" style="width:100%;margin-top:4px">
+      <i class="ti ti-heart${isFav?'-filled':''}"></i>${isFav?'즐겨찾기 해제':'즐겨찾기 추가'}
+    </button>
+  `;
+}
+
+// ── TODAY ──
+async function renderToday(){
+  const el=document.getElementById('screen-today');
+  el.innerHTML=`<div class="loading"><i class="ti ti-loader-2"></i>불러오는 중...</div>`;
+  const ok = await loadAll();
+  if(!ok){el.innerHTML=`<div class="empty"><i class="ti ti-wifi-off"></i><p>연결 오류</p><small>인터넷을 확인해주세요</small></div>`;return}
   const entry=entries.find(e=>e.date===today());
-  document.getElementById('screen-today').innerHTML=entry?entryHTML(entry,null)
+  el.innerHTML=entry?entryCardHTML(entry)
     :`<div class="empty"><i class="ti ti-book-off"></i><p>오늘 등록된 표현이 없어요</p><small>관리 탭에서 추가해보세요</small></div>`;
 }
 
-/* ALL */
-function renderAll(){
+// ── ALL ──
+async function renderAll(){
   const el=document.getElementById('screen-all');
-  let filtered=entries.slice().sort((a,b)=>b.date.localeCompare(a.date));
-  if(allFilterFolder!=='all') filtered=filtered.filter(e=>e.folder===allFilterFolder);
+  el.innerHTML=`<div class="loading"><i class="ti ti-loader-2"></i>불러오는 중...</div>`;
+  await loadAll();
+  let filtered=entries.slice();
+  if(allFilterFolder!=='all') filtered=filtered.filter(e=>e.folder_id===allFilterFolder);
 
   const folderBtns=[{id:'all',name:'전체',color:'#534AB7'},...folders]
-    .map(f=>`<button class="folder-chip${allFilterFolder===f.id?' active':''}" onclick="setAllFilter('${f.id}')" style="${allFilterFolder===f.id?'':''}">
+    .map(f=>`<button class="folder-chip${allFilterFolder===f.id?' active':''}" onclick="setAllFilter('${f.id}')">
       ${f.id!=='all'?`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${f.color};margin-right:4px;vertical-align:1px"></span>`:''}${f.name}
     </button>`).join('');
 
@@ -241,40 +301,107 @@ function renderAll(){
     <div class="folder-filter">${folderBtns}</div>
     <div style="font-size:12px;color:var(--text3);margin-bottom:12px">총 ${filtered.length}개의 표현</div>
     ${filtered.map(e=>{
-      const f=getFolder(e.folder);
-      return`<div class="expr-item" onclick="showExprDetail(${e.id})">
-        <div class="expr-item-body">
-          <div class="expr-item-date">${fmtDateKr(e.date)}${f?`<span style="background:${f.color}22;color:${f.color};font-size:10px;padding:1px 7px;border-radius:10px">${f.name}</span>`:''}</div>
+      const f=getFolder(e.folder_id);
+      const isFav=favorites.has(e.id);
+      return`<div class="expr-item">
+        <div class="expr-item-body" onclick="showExprDetail(${e.id},'all')">
+          <div class="expr-item-top"><span class="expr-item-date">${fmtDateKr(e.date)}</span>${f?`<span style="background:${f.color}22;color:${f.color};font-size:10px;padding:1px 7px;border-radius:10px">${f.name}</span>`:''}</div>
           <div class="expr-item-kor">${e.korean}</div>
           <div class="expr-item-eng">${e.english}</div>
         </div>
-        <i class="ti ti-chevron-right expr-item-chevron"></i>
+        <div class="expr-item-right">
+          <button class="fav-btn${isFav?' active':''}" onclick="toggleFavList(${e.id},this)"><i class="ti ti-heart${isFav?'-filled':''}"></i></button>
+          <i class="ti ti-chevron-right" style="color:var(--text3);font-size:16px"></i>
+        </div>
       </div>`;
     }).join('')}
     ${filtered.length===0?'<div class="empty" style="padding:32px 20px"><i class="ti ti-inbox"></i><p>표현이 없어요</p></div>':''}
-    <div style="height:8px"></div>
-  `;
+    <div style="height:8px"></div>`;
 }
 
 function setAllFilter(fid){allFilterFolder=fid;renderAll()}
 
-function showExprDetail(id){
+function showExprDetail(id, fromTab){
   const entry=entries.find(e=>e.id===id);if(!entry)return;
-  const el=document.getElementById('screen-all');
-  el.innerHTML=entryHTML(entry,'renderAll()');
+  const el=document.getElementById('screen-'+fromTab);
+  el.innerHTML=entryHTML(entry,`renderFromTab('${fromTab}')`,fromTab);
   el.scrollTop=0;
+}
+
+function renderFromTab(tab){
+  if(tab==='all')renderAll();
+  else if(tab==='fav')renderFav();
+  else if(tab==='calendar')renderCalendar();
 }
 
 function editEntryFromDetail(id){showTab('admin');setTimeout(()=>editEntry(id),100)}
 
-/* CONFIRM DELETE */
+// ── FAVORITES ──
+async function renderFav(){
+  const el=document.getElementById('screen-fav');
+  el.innerHTML=`<div class="loading"><i class="ti ti-loader-2"></i>불러오는 중...</div>`;
+  await loadAll();
+  const favEntries=entries.filter(e=>favorites.has(e.id));
+  el.innerHTML=favEntries.length===0
+    ?`<div class="empty"><i class="ti ti-heart"></i><p>즐겨찾기가 없어요</p><small>표현에서 ♡ 버튼을 눌러 추가해보세요</small></div>`
+    :`<div style="font-size:12px;color:var(--text3);margin-bottom:12px">즐겨찾기 ${favEntries.length}개</div>
+    ${favEntries.map(e=>{
+      const f=getFolder(e.folder_id);
+      return`<div class="expr-item">
+        <div class="expr-item-body" onclick="showExprDetail(${e.id},'fav')">
+          <div class="expr-item-top"><span class="expr-item-date">${fmtDateKr(e.date)}</span>${f?`<span style="background:${f.color}22;color:${f.color};font-size:10px;padding:1px 7px;border-radius:10px">${f.name}</span>`:''}</div>
+          <div class="expr-item-kor">${e.korean}</div>
+          <div class="expr-item-eng">${e.english}</div>
+        </div>
+        <i class="ti ti-chevron-right" style="color:var(--text3);font-size:16px;flex-shrink:0"></i>
+      </div>`;
+    }).join('')}
+    <div style="height:8px"></div>`;
+}
+
+async function toggleFav(id, btn){
+  const isFav=favorites.has(id);
+  try{
+    if(isFav){
+      await sb('DELETE',`favorites?device_id=eq.${DEVICE_ID}&expression_id=eq.${id}`);
+      favorites.delete(id);
+      showToast('즐겨찾기 해제');
+    } else {
+      await sb('POST','favorites',{device_id:DEVICE_ID,expression_id:id});
+      favorites.add(id);
+      showToast('즐겨찾기 추가! ♡');
+    }
+    if(btn){
+      btn.className=`btn-fav-detail${favorites.has(id)?' active':''}`;
+      btn.innerHTML=`<i class="ti ti-heart${favorites.has(id)?'-filled':''}"></i>${favorites.has(id)?'즐겨찾기 해제':'즐겨찾기'}`;
+    }
+  } catch(e){showToast('오류가 발생했어요')}
+}
+
+async function toggleFavList(id, btn){
+  const isFav=favorites.has(id);
+  try{
+    if(isFav){
+      await sb('DELETE',`favorites?device_id=eq.${DEVICE_ID}&expression_id=eq.${id}`);
+      favorites.delete(id);
+    } else {
+      await sb('POST','favorites',{device_id:DEVICE_ID,expression_id:id});
+      favorites.add(id);
+    }
+    btn.className=`fav-btn${favorites.has(id)?' active':''}`;
+    btn.innerHTML=`<i class="ti ti-heart${favorites.has(id)?'-filled':''}"></i>`;
+    showToast(favorites.has(id)?'즐겨찾기 추가! ♡':'즐겨찾기 해제');
+  } catch(e){showToast('오류가 발생했어요')}
+}
+
+// ── DELETE ──
 function confirmDelete(id){
   const entry=entries.find(e=>e.id===id);if(!entry)return;
   const ov=document.createElement('div');
   ov.className='confirm-overlay';
   ov.innerHTML=`<div class="confirm-box">
     <div class="confirm-title">표현 삭제</div>
-    <div class="confirm-msg">"${entry.english}" 을(를) 삭제할까요? 이 작업은 되돌릴 수 없어요.</div>
+    <div class="confirm-msg">"${entry.english}"을(를) 삭제할까요? 되돌릴 수 없어요.</div>
     <div class="confirm-btns">
       <button class="confirm-cancel" onclick="this.closest('.confirm-overlay').remove()">취소</button>
       <button class="confirm-ok" onclick="deleteEntry(${id})">삭제</button>
@@ -283,30 +410,34 @@ function confirmDelete(id){
   document.body.appendChild(ov);
 }
 
-function deleteEntry(id){
+async function deleteEntry(id){
   document.querySelector('.confirm-overlay')?.remove();
-  entries=entries.filter(e=>e.id!==id);
-  save(entries);
-  showToast('삭제됐어요');
-  renderAll();
+  try{
+    await sb('DELETE',`expressions?id=eq.${id}`);
+    entries=entries.filter(e=>e.id!==id);
+    showToast('삭제됐어요');
+    renderAll();
+  } catch(e){showToast('삭제 실패')}
 }
 
 function toggleAudio(id){
-  const entry=entries.find(e=>e.id===id);if(!entry?.audioData)return;
+  const entry=entries.find(e=>e.id===id);if(!entry?.audio_data)return;
   const icon=document.getElementById('pi'+id);
   if(currentAudio){
     currentAudio.pause();currentAudio.currentTime=0;
     const was=currentAudio._entryId===id;currentAudio=null;
     if(icon)icon.className='ti ti-player-play';if(was)return;
   }
-  currentAudio=new Audio(entry.audioData);currentAudio._entryId=id;
+  currentAudio=new Audio(entry.audio_data);currentAudio._entryId=id;
   if(icon)icon.className='ti ti-player-pause';
   currentAudio.play();
   currentAudio.onended=()=>{currentAudio=null;if(icon)icon.className='ti ti-player-play'};
 }
 
-/* CALENDAR */
-function renderCalendar(){
+// ── CALENDAR ──
+async function renderCalendar(){
+  const el=document.getElementById('screen-calendar');
+  if(!entries.length) await loadAll();
   const now=new Date();
   if(calYear===undefined){calYear=now.getFullYear();calMonth=now.getMonth()}
   const todayStr=today(),entryDates=new Set(entries.map(e=>e.date));
@@ -319,7 +450,7 @@ function renderCalendar(){
     const cls=ds===todayStr?' today':entryDates.has(ds)?' has':'';
     days+=`<button class="cal-day${cls}" onclick="pickDay('${ds}')">${d}</button>`;
   }
-  document.getElementById('screen-calendar').innerHTML=`
+  el.innerHTML=`
     <div class="card">
       <div class="cal-header">
         <button class="cal-nav" onclick="changeMonth(-1)"><i class="ti ti-chevron-left"></i></button>
@@ -342,39 +473,52 @@ function pickDay(ds){
   document.querySelectorAll('.cal-day').forEach(b=>{if(b.onclick?.toString().includes(`'${ds}'`))b.classList.add('sel')});
   const entry=entries.find(e=>e.date===ds),detail=document.getElementById('cal-detail');
   if(!entry){detail.innerHTML=`<div class="empty" style="padding:24px"><p>${fmtDateKr(ds)}</p><small>등록된 표현 없음</small></div>`;return}
-  detail.innerHTML=entryHTML(entry,null);
+  detail.innerHTML=entryHTML(entry,'renderCalendar()','calendar');
 }
 
-/* ADMIN */
-function renderAdmin(){
+// ── ADMIN ──
+async function renderAdmin(){
+  const el=document.getElementById('screen-admin');
+  if(!isAdmin){
+    el.innerHTML=`<div style="padding:32px 0">
+      <div class="empty"><i class="ti ti-lock"></i><p>관리자 전용</p><small>비밀번호를 입력해주세요</small></div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <input type="password" id="admin-pw" placeholder="관리자 비밀번호" style="flex:1">
+        <button onclick="checkAdmin()" style="padding:10px 14px;background:var(--purple);color:white;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer">입력</button>
+      </div>
+    </div>`;
+    return;
+  }
+  if(!entries.length) await loadAll();
   pendingAudio={name:null,data:null};
   const folderOptions=folders.map(f=>`<option value="${f.id}">${f.name}</option>`).join('');
-  const list=entries.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(e=>{
-    const f=getFolder(e.folder);
+  const list=entries.map(e=>{
+    const f=getFolder(e.folder_id);
     return`<div class="entry-list-item">
-      <div class="entry-list-item-left" onclick="editEntry(${e.id})" style="cursor:pointer">
+      <div class="entry-list-item-left" onclick="editEntry(${e.id})">
         <div class="entry-list-date">${fmtDate(e.date)}${f?`<span style="background:${f.color}22;color:${f.color};font-size:10px;padding:1px 7px;border-radius:10px">${f.name}</span>`:''}</div>
         <div class="entry-list-text">${e.english}</div>
       </div>
-      <button class="entry-delete" onclick="confirmDelete(${e.id})" aria-label="삭제"><i class="ti ti-trash"></i></button>
+      <button class="entry-delete" onclick="confirmDelete(${e.id})"><i class="ti ti-trash"></i></button>
     </div>`;
   }).join('');
-
-  const folderList=folders.map((f,i)=>`
+  const folderList=folders.map(f=>`
     <div class="folder-row">
       <span class="folder-color-dot" style="background:${f.color}"></span>
       <span class="folder-name-text">${f.name}</span>
       <button class="folder-delete-btn" onclick="deleteFolder('${f.id}')"><i class="ti ti-x"></i></button>
     </div>`).join('');
-
-  document.getElementById('screen-admin').innerHTML=`
+  el.innerHTML=`
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+      <button onclick="logoutAdmin()" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--text3)"><i class="ti ti-logout" style="font-size:14px;vertical-align:-2px"></i> 로그아웃</button>
+    </div>
     <div class="admin-block">
       <div class="admin-heading"><i class="ti ti-circle-plus"></i>새 표현 등록</div>
       <div class="form-group"><label class="form-label">날짜</label><input type="date" id="a-date" value="${today()}"></div>
       <div class="form-group"><label class="form-label">폴더</label><select id="a-folder">${folderOptions}</select></div>
       <div class="form-group"><label class="form-label">한국어 문장</label><input type="text" id="a-kor" placeholder="예) 사는게 다 그렇지 뭐"></div>
       <div class="form-group"><label class="form-label">영어 표현</label><input type="text" id="a-eng" placeholder="예) Such is life."></div>
-      <div class="form-group"><label class="form-label">영사고 (영어식 사고)</label><textarea id="a-think" placeholder="예) 그런(것이) 이야 인생."></textarea></div>
+      <div class="form-group"><label class="form-label">영사고</label><textarea id="a-think" placeholder="예) 그런(것이) 이야 인생."></textarea></div>
       <div class="form-group"><label class="form-label">단어 분석 (줄바꿈으로 구분)</label><textarea id="a-words" placeholder="예) such - a. 그러한"></textarea></div>
       <div class="form-group"><label class="form-label">해설</label><textarea id="a-exp" placeholder="해설을 입력하세요"></textarea></div>
       <div class="form-group">
@@ -387,7 +531,7 @@ function renderAdmin(){
     <div class="divider"></div>
     <div class="admin-block">
       <div class="admin-heading"><i class="ti ti-folder"></i>폴더 관리</div>
-      <div id="folder-list">${folderList}</div>
+      <div>${folderList}</div>
       <div style="display:flex;gap:8px;margin-top:10px">
         <input type="text" id="new-folder-name" placeholder="새 폴더 이름" style="flex:1">
         <button onclick="addFolder()" style="padding:10px 14px;background:var(--purple);color:white;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">추가</button>
@@ -401,17 +545,33 @@ function renderAdmin(){
     <div style="height:20px"></div>`;
 }
 
-function addFolder(){
+// 관리자 비밀번호 (간단하게 로컬 체크)
+const ADMIN_PW = 'english2026';
+function checkAdmin(){
+  const pw=document.getElementById('admin-pw')?.value;
+  if(pw===ADMIN_PW){ isAdmin=true; localStorage.setItem('is_admin','true'); renderAdmin(); }
+  else showToast('비밀번호가 틀렸어요');
+}
+function logoutAdmin(){ isAdmin=false; localStorage.removeItem('is_admin'); renderAdmin(); }
+
+async function addFolder(){
   const name=document.getElementById('new-folder-name').value.trim();
   if(!name){showToast('폴더 이름을 입력해주세요');return}
   const color=FOLDER_COLORS[folders.length%FOLDER_COLORS.length];
-  folders.push({id:'f'+Date.now(),name,color});
-  saveFolders(folders);showToast('폴더 추가 완료!');renderAdmin();
+  const id='f'+Date.now();
+  try{
+    await sb('POST','folders',{id,name,color});
+    folders.push({id,name,color});
+    showToast('폴더 추가 완료!');renderAdmin();
+  } catch(e){showToast('오류: '+e.message)}
 }
 
-function deleteFolder(id){
-  if(entries.some(e=>e.folder===id)){showToast('이 폴더에 표현이 있어요. 먼저 표현을 이동하거나 삭제해주세요');return}
-  folders=folders.filter(f=>f.id!==id);saveFolders(folders);showToast('폴더 삭제 완료');renderAdmin();
+async function deleteFolder(id){
+  if(entries.some(e=>e.folder_id===id)){showToast('이 폴더에 표현이 있어요. 먼저 이동하거나 삭제해주세요');return}
+  try{
+    await sb('DELETE',`folders?id=eq.${id}`);
+    folders=folders.filter(f=>f.id!==id);showToast('폴더 삭제 완료');renderAdmin();
+  } catch(e){showToast('오류: '+e.message)}
 }
 
 function handleAudio(input){
@@ -429,53 +589,63 @@ function clearAudio(){
   const i=document.querySelector('#screen-admin input[type=file]');if(i)i.value='';
 }
 
-function saveEntry(){
+async function saveEntry(){
   const date=document.getElementById('a-date').value;
   const kor=document.getElementById('a-kor').value.trim();
   const eng=document.getElementById('a-eng').value.trim();
   if(!date||!kor||!eng){showToast('날짜, 한국어, 영어는 필수예요');return}
-  const idx=entries.findIndex(e=>e.date===date);
+  const existing=entries.find(e=>e.date===date);
   const obj={
-    id:idx>=0?entries[idx].id:Date.now(),date,
-    folder:document.getElementById('a-folder').value,
-    korean:kor,english:eng,
+    id: existing ? existing.id : Date.now(),
+    date, folder_id:document.getElementById('a-folder').value,
+    korean:kor, english:eng,
     thinking:document.getElementById('a-think').value.trim(),
     words:document.getElementById('a-words').value.trim(),
     explanation:document.getElementById('a-exp').value.trim(),
-    audioName:pendingAudio.name||(idx>=0?entries[idx].audioName:null),
-    audioData:pendingAudio.data||(idx>=0?entries[idx].audioData:null)
+    audio_name:pendingAudio.name||(existing?existing.audio_name:null),
+    audio_data:pendingAudio.data||(existing?existing.audio_data:null)
   };
-  if(idx>=0)entries[idx]=obj;else entries.push(obj);
-  save(entries);showToast(idx>=0?'수정 완료! ✓':'저장 완료! ✓');
-  setTimeout(()=>renderAdmin(),300);
+  try{
+    if(existing){
+      await sb('PATCH',`expressions?id=eq.${existing.id}`,obj);
+      Object.assign(existing,obj);
+      showToast('수정 완료! ✓');
+    } else {
+      await sb('POST','expressions',obj);
+      entries.unshift(obj);
+      showToast('저장 완료! ✓');
+    }
+    setTimeout(()=>renderAdmin(),300);
+  } catch(e){showToast('저장 실패: '+e.message)}
 }
 
 function editEntry(id){
   const e=entries.find(x=>x.id===id);if(!e)return;
-  const el=document.getElementById('screen-admin');el.scrollTop=0;
+  document.getElementById('screen-admin').scrollTop=0;
   document.getElementById('a-date').value=e.date;
-  document.getElementById('a-folder').value=e.folder||folders[0]?.id||'';
+  document.getElementById('a-folder').value=e.folder_id||folders[0]?.id||'';
   document.getElementById('a-kor').value=e.korean;
   document.getElementById('a-eng').value=e.english;
   document.getElementById('a-think').value=e.thinking||'';
   document.getElementById('a-words').value=e.words||'';
   document.getElementById('a-exp').value=e.explanation||'';
-  if(e.audioData){
-    pendingAudio={name:e.audioName,data:e.audioData};
+  if(e.audio_data){
+    pendingAudio={name:e.audio_name,data:e.audio_data};
     const p=document.getElementById('a-audio-preview');
-    if(p)p.innerHTML=`<div class="file-chip"><i class="ti ti-file-music"></i><span>${e.audioName||'음성파일'}</span><button onclick="clearAudio()"><i class="ti ti-x" style="font-size:14px"></i></button></div>`;
+    if(p)p.innerHTML=`<div class="file-chip"><i class="ti ti-file-music"></i><span>${e.audio_name||'음성파일'}</span><button onclick="clearAudio()"><i class="ti ti-x" style="font-size:14px"></i></button></div>`;
   }
   showToast('내용 수정 후 저장하세요');
 }
 
-/* TABS */
+// ── TABS ──
 function showTab(tab){
   if(currentAudio){currentAudio.pause();currentAudio=null}
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['today','all','calendar','admin'][i]===tab));
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['today','all','fav','calendar','admin'][i]===tab));
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+tab).classList.add('active');
   if(tab==='today')renderToday();
   else if(tab==='all')renderAll();
+  else if(tab==='fav')renderFav();
   else if(tab==='calendar')renderCalendar();
   else renderAdmin();
 }
