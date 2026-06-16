@@ -547,7 +547,7 @@ async function renderAdmin(){
 }
 
 // 관리자 비밀번호 (간단하게 로컬 체크)
-const ADMIN_PW = 'english2026';
+const ADMIN_PW = '2026';
 function checkAdmin(){
   const pw=document.getElementById('admin-pw')?.value;
   if(pw===ADMIN_PW){ isAdmin=true; localStorage.setItem('is_admin','true'); renderAdmin(); }
