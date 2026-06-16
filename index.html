@@ -106,6 +106,12 @@ textarea{resize:vertical;min-height:72px;line-height:1.6}
 .upload-zone i{font-size:28px;color:var(--purple);display:block;margin-bottom:6px;line-height:1}
 .upload-zone p{font-size:13px;color:var(--text2)}
 .upload-zone input{display:none}
+/* Audio seekbar */
+.audio-seekbar-wrap{width:100%;margin-top:8px}
+.audio-seekbar{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;background:var(--purple-mid);outline:none;cursor:pointer}
+.audio-seekbar::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--purple);cursor:pointer;margin-top:-5px}
+.audio-seekbar::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--purple);cursor:pointer;border:none}
+.audio-time-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:4px}
 .file-chip{display:flex;align-items:center;gap:8px;background:var(--purple-light);border-radius:var(--radius-sm);padding:8px 12px;margin-top:8px}
 @media(prefers-color-scheme:dark){.file-chip{background:rgba(83,74,183,0.2)}}
 .file-chip i{color:var(--purple);font-size:18px;flex-shrink:0}
@@ -229,7 +235,24 @@ function folderBadgeHTML(folderId){
 
 function audioBlock(entry){
   if(!entry.audio_data)return`<div class="no-audio"><i class="ti ti-volume-off"></i><span>음성 파일 없음</span></div>`;
-  return`<div class="audio-player"><button class="play-btn" onclick="toggleAudio(${entry.id})" id="pb${entry.id}"><i class="ti ti-player-play" id="pi${entry.id}"></i></button><div class="audio-info"><div class="audio-name">${entry.audio_name||'음성 파일'}</div><div class="audio-hint">탭하여 재생</div></div></div>`;
+  return`<div class="audio-player" style="flex-direction:column;align-items:stretch;gap:8px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="play-btn" onclick="toggleAudio(${entry.id})" id="pb${entry.id}"><i class="ti ti-player-play" id="pi${entry.id}"></i></button>
+      <div class="audio-info">
+        <div class="audio-name">${entry.audio_name||'음성 파일'}</div>
+        <div class="audio-hint" id="at${entry.id}">탭하여 재생</div>
+      </div>
+    </div>
+    <div class="audio-seekbar-wrap">
+      <input type="range" class="audio-seekbar" id="as${entry.id}" value="0" min="0" max="100" step="0.1"
+        oninput="seekAudio(${entry.id},this.value)"
+        style="background:linear-gradient(to right,var(--purple) 0%,var(--purple-mid) 0%)" >
+      <div class="audio-time-row">
+        <span id="act${entry.id}">0:00</span>
+        <span id="adt${entry.id}">0:00</span>
+      </div>
+    </div>
+  </div>`;
 }
 
 function entryHTML(entry, backFn, fromTab){
@@ -420,18 +443,67 @@ async function deleteEntry(id){
   } catch(e){showToast('삭제 실패')}
 }
 
+function formatTime(s){
+  if(isNaN(s))return'0:00';
+  const m=Math.floor(s/60),sec=Math.floor(s%60);
+  return`${m}:${String(sec).padStart(2,'0')}`;
+}
+
+function seekAudio(id, val){
+  if(currentAudio && currentAudio._entryId===id){
+    const t=(val/100)*currentAudio.duration;
+    if(!isNaN(t)) currentAudio.currentTime=t;
+  }
+}
+
+function updateSeekbar(id){
+  if(!currentAudio || currentAudio._entryId!==id) return;
+  const pct = currentAudio.duration ? (currentAudio.currentTime/currentAudio.duration)*100 : 0;
+  const bar = document.getElementById('as'+id);
+  const cur = document.getElementById('act'+id);
+  const dur = document.getElementById('adt'+id);
+  if(bar){
+    bar.value=pct;
+    bar.style.background=`linear-gradient(to right,var(--purple) ${pct}%,var(--purple-mid) ${pct}%)`;
+  }
+  if(cur) cur.textContent=formatTime(currentAudio.currentTime);
+  if(dur) dur.textContent=formatTime(currentAudio.duration);
+}
+
 function toggleAudio(id){
   const entry=entries.find(e=>e.id===id);if(!entry?.audio_data)return;
   const icon=document.getElementById('pi'+id);
+  const hint=document.getElementById('at'+id);
   if(currentAudio){
-    currentAudio.pause();currentAudio.currentTime=0;
-    const was=currentAudio._entryId===id;currentAudio=null;
-    if(icon)icon.className='ti ti-player-play';if(was)return;
+    const prevId=currentAudio._entryId;
+    currentAudio.pause();
+    if(currentAudio._raf) cancelAnimationFrame(currentAudio._raf);
+    currentAudio.currentTime=0;
+    const was=prevId===id; currentAudio=null;
+    const prevIcon=document.getElementById('pi'+prevId);
+    if(prevIcon) prevIcon.className='ti ti-player-play';
+    const prevBar=document.getElementById('as'+prevId);
+    if(prevBar){prevBar.value=0;prevBar.style.background=`linear-gradient(to right,var(--purple) 0%,var(--purple-mid) 0%)`}
+    const prevCur=document.getElementById('act'+prevId);
+    if(prevCur) prevCur.textContent='0:00';
+    if(was) return;
   }
-  currentAudio=new Audio(entry.audio_data);currentAudio._entryId=id;
-  if(icon)icon.className='ti ti-player-pause';
+  currentAudio=new Audio(entry.audio_data);
+  currentAudio._entryId=id;
+  if(icon) icon.className='ti ti-player-pause';
+  if(hint) hint.textContent='재생 중';
   currentAudio.play();
-  currentAudio.onended=()=>{currentAudio=null;if(icon)icon.className='ti ti-player-play'};
+  // 시크바 업데이트 루프
+  function rafLoop(){ updateSeekbar(id); if(currentAudio&&!currentAudio.paused) currentAudio._raf=requestAnimationFrame(rafLoop); }
+  currentAudio._raf=requestAnimationFrame(rafLoop);
+  currentAudio.onended=()=>{
+    if(icon) icon.className='ti ti-player-play';
+    if(hint) hint.textContent='탭하여 재생';
+    const bar=document.getElementById('as'+id);
+    if(bar){bar.value=0;bar.style.background=`linear-gradient(to right,var(--purple) 0%,var(--purple-mid) 0%)`}
+    const cur=document.getElementById('act'+id);if(cur)cur.textContent='0:00';
+    currentAudio=null;
+  };
 }
 
 // ── CALENDAR ──
@@ -547,7 +619,7 @@ async function renderAdmin(){
 }
 
 // 관리자 비밀번호 (간단하게 로컬 체크)
-const ADMIN_PW = '2026';
+const ADMIN_PW = 'english2026';
 function checkAdmin(){
   const pw=document.getElementById('admin-pw')?.value;
   if(pw===ADMIN_PW){ isAdmin=true; localStorage.setItem('is_admin','true'); renderAdmin(); }
