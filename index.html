@@ -503,9 +503,10 @@ async function renderAdmin(){
     </div>`;
   }).join('');
   const folderList=folders.map(f=>`
-    <div class="folder-row">
+    <div class="folder-row" id="frow-${f.id}">
       <span class="folder-color-dot" style="background:${f.color}"></span>
       <span class="folder-name-text">${f.name}</span>
+      <button class="folder-delete-btn" onclick="startRenameFolder('${f.id}')" style="color:var(--purple)" title="이름 변경"><i class="ti ti-pencil"></i></button>
       <button class="folder-delete-btn" onclick="deleteFolder('${f.id}')"><i class="ti ti-x"></i></button>
     </div>`).join('');
   el.innerHTML=`
@@ -553,6 +554,29 @@ function checkAdmin(){
   else showToast('비밀번호가 틀렸어요');
 }
 function logoutAdmin(){ isAdmin=false; localStorage.removeItem('is_admin'); renderAdmin(); }
+
+function startRenameFolder(id){
+  const f=folders.find(x=>x.id===id);if(!f)return;
+  const row=document.getElementById('frow-'+id);if(!row)return;
+  row.innerHTML=`
+    <span class="folder-color-dot" style="background:${f.color}"></span>
+    <input type="text" value="${f.name}" id="rename-input-${id}" style="flex:1;font-size:13px;padding:4px 8px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:var(--surface);color:var(--text)">
+    <button onclick="confirmRenameFolder('${id}')" style="padding:4px 10px;background:var(--purple);color:white;border:none;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer">저장</button>
+    <button onclick="renderAdmin()" style="padding:4px 8px;background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px">취소</button>
+  `;
+  document.getElementById('rename-input-'+id)?.focus();
+}
+
+async function confirmRenameFolder(id){
+  const input=document.getElementById('rename-input-'+id);
+  const name=input?.value.trim();
+  if(!name){showToast('이름을 입력해주세요');return}
+  try{
+    await sb('PATCH',`folders?id=eq.${id}`,{name});
+    const f=folders.find(x=>x.id===id);if(f)f.name=name;
+    showToast('폴더 이름 변경 완료!');renderAdmin();
+  } catch(e){showToast('변경 실패: '+e.message)}
+}
 
 async function addFolder(){
   const name=document.getElementById('new-folder-name').value.trim();
